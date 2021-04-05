@@ -1,0 +1,111 @@
+/**The MIT License (MIT)
+
+Copyright (c) 2021 by Matthias Wetzka
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
+
+#ifndef SETTINGS_H
+#define SETTINGS_H
+
+#include "Arduino.h"
+#include "M5Stack.h"
+
+//######################### INFO #####################################
+/* This is the general configfile for MettyWeatherStation. This program
+   is a weather station for the M5Stack. It queries an online service
+   for the weather at a given location and displays it on the M5Stack
+   LCD using several screens. 
+   
+   Usage
+   Left and right button cycle the different screens, center button
+   wakes device from sleep or forces a weather refresh, in case of
+   already awake. Device goes to sleep after some seconds, when not
+   used for DISPLAY_WAKE_MILLIS. Weather updated is triggered
+   automatically every UPDATE_INTERVAL_SECS seconds.
+   
+   Compared to other weather station code,
+   this programm attempts to be different in several ways:
+   * flicker free update
+   * color display including icons
+   * can run on battery for several hours (depending on capacity)
+   * work around some of the quirks/limitations of M5Stack
+   ** degree "symbol"
+   ** low speaker noise
+   ** flicker-free LCD init from sleep
+   ** wake from sleep with any button 
+
+   Configuration
+   Open the file Settings.h.template, change as needed and store as
+   Settings.h.
+
+   Contributions
+   I basically also used this program to learn C. Pull requests to 
+   improve the code are highly apreciated!
+*/
+
+//################### WIFI SETTINGS ##################################
+/* MettyWeatherStation uses your WiFi to periodically update weather
+   data from openweathermap.org. Only one network is supported.
+*/
+#define WIFI_SSID "xxx"       // name of the wifi network
+#define WIFI_PWD "xxx" // password of the wifi network
+#define WIFI_CONNECTION_ATTEMPTS 10    // amount of connection retries
+
+//################### WEATHER + LOCATION ############################
+/* MettyWeatherStation uses openweathermap.org to query the weather
+   data. The service is free for personal use, but you need to get
+   a personalized API key. This small guide explains how to obtain
+   that key: https://docs.thingpulse.com/how-tos/openweathermap-key/.
+
+   In addition to the API key, MettyWeatherStation also needs to know
+   the OpenWeatherMap location ID of the place for which you want to
+   query the weather. Go to https://openweathermap.org/find?q= and 
+   search for a location. Go through the result set and select the 
+   entry closest to the actual location you want to display data for. 
+   It'll be a URL like https://openweathermap.org/city/2861650. The 
+   number at the end is what you assign to the constant below.
+*/
+
+#define LOCATION_LAT                 "49.4478" // location latitude, open https://openweathermap.org/find?q= to get it
+#define LOCATION_LON                 "11.0683" // location longitude, open https://openweathermap.org/find?q= to get it
+#define LOCATION_TZ                  1         // the (utc+) time zone of your chosen location in hours
+#define LOCATION_DST_MINS            60        // use 60 minutes for daylight saving time (summer time) in some countries
+
+#define OPEN_WEATHER_MAP_APP_ID      "xxx" // OpenWeatherMap API key; you need to register on their website
+
+#define UPDATE_INTERVAL_SECS         20 * 60   // frequency of the weather update in seconds; less frequent saves energy
+
+//########################## UI SETTINGS #################################
+/* Misc UI customization settings. 
+   The following color pickers might be helpful:
+    * http://www.barth-dev.de/online/rgb565-color-picker/
+    * https://chrishewett.com/blog/true-rgb565-colour-picker/
+ */
+#define lcdSleepBrightness   6           // LCD brightness level during sleep time (1-255); darker saves energy
+#define lcdActiveBrightness  10          // LCD brightness level during activ time (1-255); darker saves energy
+#define DISPLAY_WAKE_MILLIS  10L * 1000L // time in seconds that has to pass without keypress before sleep
+
+// note: color depth is rgb332_1Byte
+#define COLOR_BG             0x280a      // background color 
+#define COLOR_FG             0xFFFF      // foreground color, e.g. text and icons
+#define COLOR_AC             0xed0a      // accent color, e.g. headlines
+#define COLOR_ERROR          0xF800     // error text color
+
+#endif
