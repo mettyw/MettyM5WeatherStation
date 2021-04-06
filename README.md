@@ -1,7 +1,5 @@
 # MettyM5WeatherStation
-WeatherStation for M5 Stack
-
-This program is a weather station for the M5Stack. It queries an online service for the weather at a given location and displays it on the M5Stack LCD using several screens. 
+This program is a weather station for the M5Stack (tested on M5Stack grey). It queries an online service for the weather at a given location and displays it on the M5Stack LCD using several screens. 
    
 ## Usage
 Left and right button cycle the different screens, center button
@@ -30,4 +28,4 @@ I basically also used this program to learn C. Pull requests to
 improve the code are highly apreciated!
 
 ## License
-MIT
+MIT License
