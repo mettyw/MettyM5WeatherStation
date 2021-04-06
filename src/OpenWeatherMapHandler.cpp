@@ -92,7 +92,7 @@ Serial.println(buff);
 
 
   // disconnect from network
-//TODO  WiFi.disconnect(true);
+// FIXME disabled due to error and reboot  WiFi.disconnect(true);
 Serial.println(2);
 //  WiFi.mode(WIFI_OFF);
   // disable wifi to save energy
