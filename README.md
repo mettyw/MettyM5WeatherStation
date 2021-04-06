@@ -1,6 +1,18 @@
 # MettyM5WeatherStation
 This program is a weather station for the M5Stack (tested on M5Stack grey). It queries an online service for the weather at a given location and displays it on the M5Stack LCD using several screens. 
-   
+
+## Screenshots
+
+<img src="screenshots/current.jpg"
+     alt="Current Screen"
+     style="float: left; margin-right: 10px;" width="30%" />
+<img src="screenshots/today.jpg"
+     alt="Today Screen"
+     style="float: left; margin-right: 10px;" width="30%" />
+<img src="screenshots/forecast.jpg"
+     alt="Forecast Screen"
+     style="float: left; margin-right: 10px;" width="30%" />
+
 ## Usage
 Left and right button cycle the different screens, center button
 wakes device from sleep or forces a weather refresh, in case of
