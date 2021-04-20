@@ -2,16 +2,15 @@
 This program is a weather station for the M5Stack (tested on M5Stack grey). It queries an online service for the weather at a given location and displays it on the M5Stack LCD using several screens. 
 
 ## Features
-Compared to other weather station code,
-this programm attempts to be different in several ways:
-* flicker free update
-* color display including icons
+Compared to other weather station code on the web, this programm attempts to be different in several ways and appempts to work around some of the quirks or limitations of the M5Stack. Most notable features are:
+* Displays additional weather data such as day/night temperate and UVI (by using the [OpenWeatherMap one call API](https://openweathermap.org/api/one-call-api))
+* flicker free update (by using [LovyanGFX](https://github.com/lovyan03/LovyanGFX) instead of [TFT_eSPI](https://github.com/Bodmer/TFT_eSPI))
+* display sleep mode with dimmed screen (using ULP)
+* wake from sleep with any button (using ULP)
 * can run on battery for several hours (depending on capacity)
-* work around some of the quirks/limitations of M5Stack
-** degree "symbol"
-** low speaker noise on M5Stack
-** flicker-free LCD init from sleep
-** wake from sleep with any button 
+* color display including icons
+* low speaker noise on M5Stack
+* degree "symbol"
 
 ## Compatibilty
 I tested the program on an M5Stack grey. Testers for other M5 devices are welcome!
