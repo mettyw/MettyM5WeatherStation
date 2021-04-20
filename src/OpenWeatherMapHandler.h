@@ -94,12 +94,16 @@ class OpenWeatherMapOneCallClient: public JsonListener {
     uint8_t weatherItemCounter = 0;
     uint8_t dailyItemCounter = 0;
     uint8_t maxForecasts;
+    uint8_t statusCode; // REST call status
+    String statusMessage; // REST call message
 
     void doUpdate(WeatherData *data, String path);
 
   public:
     OpenWeatherMapOneCallClient();
     void updateDataById(WeatherData *data, String appId, String lat, String lon, uint8_t maxForecasts);
+    boolean isStatusError();
+    String getStatusMessage();
 
     virtual void whitespace(char c);
     virtual void startDocument();

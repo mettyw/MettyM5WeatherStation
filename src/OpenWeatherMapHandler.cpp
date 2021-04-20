@@ -69,8 +69,7 @@ void updateData(WeatherData *data, WeatherDisplay *display, bool force) {
     Serial.println(msg);
 
     display->showError(msg);
-
-    delay(5000);
+    delay(30000);
     esp_restart();
   }
 
@@ -82,6 +81,13 @@ void updateData(WeatherData *data, WeatherDisplay *display, bool force) {
 
   OpenWeatherMapOneCallClient client;
   client.updateDataById(data, OPEN_WEATHER_MAP_APP_ID, LOCATION_LAT, LOCATION_LON, MAX_FORECASTS);
+  if ( client.isStatusError() ) {
+    String msg = client.getStatusMessage();
+    Serial.println(msg);
+    display->showError( msg );
+    delay(30000);
+    esp_restart();
+  }
 
   display->showProgressOverlay(100, "Update finished.");
   delay(1000);
@@ -129,6 +135,8 @@ void OpenWeatherMapOneCallClient::doUpdate(WeatherData *data, String path) {
   this->currentParentParent = "";
   this->isDailyArray = false;
   this->dailyItemCounter = 0;
+  this->statusCode = 200; // pre-init with success status, since the "cod" field might not be part of the JSON
+  this->statusMessage = "";
   this->data = data;
   JsonStreamingParser parser;
   parser.setListener(this);
@@ -145,9 +153,11 @@ void OpenWeatherMapOneCallClient::doUpdate(WeatherData *data, String path) {
     while (client.connected() || client.available()) {
       if (client.available()) {
         if ((millis() - lost_do) > lostTest) {
-          Serial.println("[HTTP] lost in client with a timeout");
+          this->statusCode = 408; // we made this one up...
+          this->statusMessage = "[HTTP] lost in client with a timeout";
           client.stop();
-          esp_restart();
+          //esp_restart();
+          return;
         }
         c = client.read();
         if (c == '{' || c == '[') {
@@ -162,9 +172,18 @@ void OpenWeatherMapOneCallClient::doUpdate(WeatherData *data, String path) {
     }
     client.stop();
   } else {
-    Serial.println("[HTTP] failed to connect to host");
+    this->statusCode = 999; // we made this one up...
+    this->statusMessage = "[HTTP] failed to connect to host";
   }
   this->data = nullptr;
+}
+
+boolean OpenWeatherMapOneCallClient::isStatusError() {
+  return this->statusCode != 200;
+}
+
+String OpenWeatherMapOneCallClient::getStatusMessage() {
+  return this->statusMessage;
 }
 
 void OpenWeatherMapOneCallClient::whitespace(char c) {
@@ -175,6 +194,12 @@ void OpenWeatherMapOneCallClient::key(String key) {
 }
 
 void OpenWeatherMapOneCallClient::value(String value) {
+  if (currentKey == "cod") {
+    this->statusCode = value.toInt();
+  }
+  if (currentKey == "message") {
+    this->statusMessage = value;
+  }
   if (currentKey == "timezone_offset") {
     data->timezone_offset = value.toInt();
   }

@@ -117,7 +117,8 @@ void WeatherDisplay::showTestScreen(WeatherData *data) {
 
 void WeatherDisplay::showError(String msg) {
   mylcd.clear();
-  mylcd.drawText(msg, 160, 120, MC_DATUM, COLOR_ERROR, mylcd.FONT_REGULAR_LARGE);
+  mylcd.drawText("Fatal Error", 10, 5, TL_DATUM, COLOR_ERROR, mylcd.FONT_BOLD_NORMAL);
+  mylcd.drawWrappedText(msg.c_str(), 10, 50, 300, COLOR_ERROR, mylcd.FONT_REGULAR_NORMAL);
   mylcd.show();
 }
 
